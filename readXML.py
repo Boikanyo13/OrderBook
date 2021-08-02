@@ -5,16 +5,13 @@ def ParseXMLFile(filename):
     #read orders in xml file and return orders array
     
     tree = ET.parse(filename)  
-    rawOrders = tree.getroot()
+    xmlOrders = tree.getroot()
     
-    orders = []
-    
-    
-    for rawOrder in rawOrders:
-        
-        #create the order object      
-        order = od.Order(rawOrder.tag, rawOrder.get(key='book'), rawOrder.get(key='operation'), rawOrder.get(key='price'), rawOrder.get(key='volume'), rawOrder.get(key='orderID'))
-        
-        orders.append(order)
-        
-    return orders
+    return xmlOrders
+
+def getOrderObject(xmlOrder):   
+    #create and return the order object      
+     
+    order = od.Order(xmlOrder.tag, xmlOrder.get(key='book'), xmlOrder.get(key='operation'), xmlOrder.get(key='price'), xmlOrder.get(key='volume'), xmlOrder.get(key='orderID'))
+     
+    return order
