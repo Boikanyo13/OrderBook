@@ -6,7 +6,22 @@ def isBookExist(books, orderBookName):
         
         if book.bookName == orderBookName:
             
-            return True
+            return book
 
-    return False
+    return None
 
+
+def addOrderToBook(book, order):
+    
+    #append the order to the book depending on the operation
+    
+    if order.operation == 'SELL':
+        
+        book.sellOrders.append(order)
+        
+    elif order.operation == 'BUY':
+        
+        book.buyOrders.append(order)
+    
+    return book
+        

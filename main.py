@@ -17,22 +17,32 @@ for xmlOrder in xmlOrders:
     #convert xml order to an object    
     order = xmlReader.getOrderObject(xmlOrder)
     
-    print(order.tag,order.book, order.operation, datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))
-
-    #check if book exists
-    if  po.isBookExist(books,order.book ):
-        print("book already exists!")
-        
-    else: 
-        #create a new book
-        books.append(orderBook.Book(order.book))
-        
-        
-#test if the new book was created   
-for book in books:
-        
-    print(book.bookName)
+    #print(order.tag,order.book, order.operation, datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))
     
+    #get the book name if it exists, else return nothing
+    book = po.isBookExist(books,order.book)
+    
+    
+    if  book == None:
+        
+        #create new orderbook
+        book = orderBook.Book(order.book)
+        
+        #add new book to the list of books
+        books.append(book)
+        
+    #add order to book
+    po.addOrderToBook(book, order)  
+        
+
+#test if the books were populated with the orders
+
+for book in books:
+    
+    print(book.bookName)
+    for order in book.sellOrders:
+              
+        print(order.tag,order.book, order.operation, datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))   
         
     
 
