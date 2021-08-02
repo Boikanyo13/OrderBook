@@ -20,8 +20,20 @@ for xmlOrder in xmlOrders:
     print(order.tag,order.book, order.operation, datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))
 
     #check if book exists
-    isBookFound = po.isBookExist(books,order.book )
-    print(isBookFound)
+    if  po.isBookExist(books,order.book ):
+        print("book already exists!")
+        
+    else: 
+        #create a new book
+        books.append(orderBook.Book(order.book))
+        
+        
+#test if the new book was created   
+for book in books:
+        
+    print(book.bookName)
+    
+        
     
 
 
