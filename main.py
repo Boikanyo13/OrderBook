@@ -8,19 +8,19 @@ import processOrder as po
 xmlOrders = xmlReader.ParseXMLFile('test.xml')
     
 # create array of book objects
-books = [orderBook.Book('book-1'),orderBook.Book('book-5')]
+books = []
 
 for xmlOrder in xmlOrders:
     
     # convert xml order to an object    
     order = xmlReader.getOrderObject(xmlOrder)
     
+   
     #print(order.tag,order.book, order.operation, datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))
     
     # get the book name if it exists, else return nothing
     book = po.isBookExist(books,order.book)
-    
-    
+      
     if  book == None:
         
         # create new orderbook
@@ -29,24 +29,38 @@ for xmlOrder in xmlOrders:
         # add new book to the list of books
         books.append(book)
         
-    # add order to book
-    po.addOrderToBook(book, order) 
+        # add order to book
+        if order.tag == 'AddOrder': 
+            po.addOrderToBook(book, order) 
     
-    #delete order
+    else:
+        
+        if order.tag == 'AddOrder': 
+            
+            # process the order        
+            po.AddOrderProcess(book, order)
+        
+        # Delete order
     
-    if order.tag == 'DeleteOrder':
+        elif order.tag == 'DeleteOrder':
         
-       book =  po.DeleteOrder(book, order)
-        
+            book =  po.DeleteOrder(book, order)
+       
+     
 
 # test if the books were populated with the orders
 
 for book in books:
     
-    print(book.bookName)
-    for order in book.buyOrders:
+    print('\n========', book.bookName, '========\n')
+    for order in book.sellOrders:
               
-        print(order.tag,order.book, order.operation,order.orderID, datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))   
+        print(order.orderID, order.price, order.volume)# datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))   
+        
+    # for order in book.buyOrders:
+              
+    #     print(order.tag,order.book, order.operation,order.orderID, datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))   
+    print('\n===========================\n')
         
     
 

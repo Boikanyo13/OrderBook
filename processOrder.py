@@ -36,6 +36,59 @@ def DeleteOrder(book, incommingOrder):
             
             book = book.buyOrders.remove(order)
             
-            book = book.sellOrders.remove(order)
+            #in case sure if we will ever delete from sell order
+            #book = book.sellOrders.remove(order)
                   
     return book
+
+def AddOrderProcess(book, incomingOrder):
+    
+    if incomingOrder.operation == 'BUY':
+        
+        addOrderBuy(book, incomingOrder)
+    
+    
+        
+def addOrderBuy(book, incomingOrder):
+    
+    #process orders with addOrder message
+    
+    if len(book.sellOrders) > 0:
+        
+      minprice = min(book.sellOrders, key=lambda x: x.price).price
+
+      if incomingOrder.price >= minprice:
+
+          minArray = list(filter(lambda x: x.price == minprice, book.sellOrders))
+
+          #if there are more qualifying orders
+          if(len(minArray)) > 1:
+
+              earliestOrder = min(minArray, key=lambda x: x.timeStamp)
+         
+              if incomingOrder.volume <= earliestOrder.volume:
+                  earliestOrder.volume = earliestOrder.volume - incomingOrder.volume
+
+              else:
+                  incomingOrder.volume = incomingOrder.volume - earliestOrder.volume
+                  book.sellOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.sellOrders))
+                  addOrderBuy(book, incomingOrder)
+
+          else:
+
+              earliestOrder = minArray[0]
+
+              if incomingOrder.volume <= earliestOrder.volume:
+                earliestOrder.volume = earliestOrder.volume - incomingOrder.volume
+
+              else:
+                incomingOrder.volume = incomingOrder.volume - earliestOrder.volume
+                book.sellOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.sellOrders))
+                addOrderBuy(book, incomingOrder)
+
+      else: 
+        book.buyOrders.append(incomingOrder)
+        
+    else: 
+        book.buyOrders.append(incomingOrder)
+      

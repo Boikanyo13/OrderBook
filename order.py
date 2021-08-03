@@ -5,8 +5,8 @@ class Order:
         self.tag = tag
         self.book = book
         self.operation = operation
-        self.price = price
-        self.volume =volume
+        self.price = float(price)
+        self.volume = float(volume)
         self.orderID = orderID
         self.timeStamp = time.time()
         
