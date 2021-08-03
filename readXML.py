@@ -12,6 +12,6 @@ def ParseXMLFile(filename):
 def getOrderObject(xmlOrder):   
     #create and return the order object      
      
-    order = od.Order(xmlOrder.tag, xmlOrder.get(key='book'), xmlOrder.get(key='operation'), xmlOrder.get(key='price'), xmlOrder.get(key='volume'), xmlOrder.get(key='orderID'))
+    order = od.Order(xmlOrder.tag, xmlOrder.get(key='book'), xmlOrder.get(key='operation'), xmlOrder.get(key='price'), xmlOrder.get(key='volume'), xmlOrder.get(key='orderId'))
      
     return order

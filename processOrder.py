@@ -1,3 +1,5 @@
+import order as od
+
 def isBookExist(books, orderBookName):
     
     #check if orderbook name exists in the list of book objects
@@ -24,4 +26,16 @@ def addOrderToBook(book, order):
         book.buyOrders.append(order)
     
     return book
+
+def DeleteOrder(book, incommingOrder):
+    # delete order from the book
+    
+    for order in book.buyOrders:
         
+        if order.orderID == incommingOrder.orderID:
+            
+            book = book.buyOrders.remove(order)
+            
+            book = book.sellOrders.remove(order)
+                  
+    return book
