@@ -6,7 +6,7 @@ import itertools as it
 
 
 # read all attributes in the xml file and return root
-xmlOrders = xmlReader.ParseXMLFile('data/test.xml')
+xmlOrders = xmlReader.ParseXMLFile('data/orders.xml')
     
 # create array of book objects
 books = []
