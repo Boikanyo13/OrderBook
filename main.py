@@ -2,6 +2,7 @@ import readXML as xmlReader
 from datetime import datetime
 import book as orderBook
 import processOrder as po
+import itertools as it
 
 
 # read all attributes in the xml file and return root
@@ -52,15 +53,25 @@ for xmlOrder in xmlOrders:
 
 for book in books:
     
-    print('\n========', book.bookName, '========\n')
-    for order in book.sellOrders:
-              
-        print(order.orderID, order.price, order.volume)# datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))   
+    print('\n================', book.bookName, '================\n')
+    print('\n ====BUY====\t    ====SELL====\n')
+    
+    for sellOrder, buyOrder in it.zip_longest(book.sellOrders,book.buyOrders):
         
-    # for order in book.buyOrders:
-              
-    #     print(order.tag,order.book, order.operation,order.orderID, datetime.utcfromtimestamp(order.timeStamp).strftime('%Y-%m-%d %H:%M:%S.%f'))   
-    print('\n===========================\n')
+        
+        if(buyOrder != None):
+           print(buyOrder.orderID, buyOrder.price, '@',buyOrder.volume,end='')
+        
+        else:
+            print('\t',end='')
+        
+        if(sellOrder != None): 
+           print('\t--',sellOrder.orderID, sellOrder.price, '@',sellOrder.volume )
+        else:
+            print('')
+           
+           
+    print('\n=================================================\n')
         
     
 

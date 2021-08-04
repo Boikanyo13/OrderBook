@@ -47,6 +47,9 @@ def AddOrderProcess(book, incomingOrder):
         
         addOrderBuy(book, incomingOrder)
     
+    elif incomingOrder.operation == 'SELL':
+        
+        addOrderSell(book, incomingOrder)
     
         
 def addOrderBuy(book, incomingOrder):
@@ -68,11 +71,17 @@ def addOrderBuy(book, incomingOrder):
          
               if incomingOrder.volume <= earliestOrder.volume:
                   earliestOrder.volume = earliestOrder.volume - incomingOrder.volume
+                  
+                  if earliestOrder.volume == 0:
+                    book.sellOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.sellOrders))
 
               else:
                   incomingOrder.volume = incomingOrder.volume - earliestOrder.volume
                   book.sellOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.sellOrders))
-                  addOrderBuy(book, incomingOrder)
+                  
+                  if incomingOrder.volume != 0:
+                    addOrderBuy(book, incomingOrder)
+                  
 
           else:
 
@@ -80,15 +89,80 @@ def addOrderBuy(book, incomingOrder):
 
               if incomingOrder.volume <= earliestOrder.volume:
                 earliestOrder.volume = earliestOrder.volume - incomingOrder.volume
+                
+                if earliestOrder.volume == 0:
+                  book.sellOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.sellOrders))
 
               else:
                 incomingOrder.volume = incomingOrder.volume - earliestOrder.volume
                 book.sellOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.sellOrders))
-                addOrderBuy(book, incomingOrder)
+                
+                if incomingOrder.volume != 0:
+                    addOrderBuy(book, incomingOrder)
 
       else: 
         book.buyOrders.append(incomingOrder)
         
     else: 
         book.buyOrders.append(incomingOrder)
+
+
+def addOrderSell(book, incomingOrder):
+
+    if len(book.buyOrders) > 0:
+    
       
+      maxprice = max(book.buyOrders, key=lambda x: x.price).price
+
+
+      if incomingOrder.price <= maxprice:
+
+          maxArray = list(filter(lambda x: x.price == maxprice, book.buyOrders))
+
+          if(len(maxArray)) > 1:
+
+              earliestOrder = min(maxArray, key=lambda x: x.timeStamp)
+
+              print(earliestOrder.orderID)
+         
+              if incomingOrder.volume <= earliestOrder.volume:
+                  earliestOrder.volume = earliestOrder.volume - incomingOrder.volume
+                  
+                  if earliestOrder.volume == 0:
+                    book.buyOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.buyOrders))
+
+              else:
+                  incomingOrder.volume = incomingOrder.volume - earliestOrder.volume
+                  
+                  book.buyOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.buyOrders))
+
+                  if incomingOrder.volume != 0:
+                    addOrderSell(book, incomingOrder)
+
+          else:
+
+              earliestOrder = maxArray[0]
+             
+
+              if incomingOrder.volume <= earliestOrder.volume:
+                earliestOrder.volume = earliestOrder.volume - incomingOrder.volume
+                
+
+                if earliestOrder.volume == 0:
+                  book.buyOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.buyOrders))
+
+              else:
+
+                incomingOrder.volume = incomingOrder.volume - earliestOrder.volume
+                
+                book.buyOrders = list(filter(lambda x: x.orderID != earliestOrder.orderID, book.buyOrders))
+
+                if incomingOrder.volume != 0:
+                    addOrderSell(book, incomingOrder)
+
+      else: 
+        book.sellOrders.append(incomingOrder)
+      
+    else:
+        book.sellOrders.append(incomingOrder)
+  
