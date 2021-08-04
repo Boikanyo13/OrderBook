@@ -123,7 +123,6 @@ def addOrderSell(book, incomingOrder):
 
               earliestOrder = min(maxArray, key=lambda x: x.timeStamp)
 
-              print(earliestOrder.orderID)
          
               if incomingOrder.volume <= earliestOrder.volume:
                   earliestOrder.volume = earliestOrder.volume - incomingOrder.volume
